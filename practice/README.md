@@ -1,0 +1,2 @@
+- 김성훈 교수님 머신러닝(https://hunkim.github.io/ml/) practice
+- 내용 정리 및 코드 연습
