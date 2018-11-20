@@ -1,3 +1,5 @@
+html header: <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 ##### machine learning
 - 컴퓨터가 학습할 수 있도록 하는 알골리즘과 기술을 갭라하는 분야
 - data로부터 leanring하여 특정 task를 수행
@@ -27,8 +29,20 @@
 - classification: output이 discrete value임(class label)
 - logistic regression의 마지막에 softmax등을 이용해서 output value -> class label로 바꾸는 방식으로 classification을 만들 수 있음
 
-##### signal
-- weighted sum($\sum_{i=0}^{10} w_{i}x_{i}$)
+##### linear regression
+- TOOD
+
+##### logisctic regression
+- probability estimation을 위한 linear model
+- parameter: w, b
+- activation: sigmoid
+- cost(log loss): J = $\frac { 1 }{ m } \sum _{ i=1 }^{ m }{ L({ y }_{ i },{ \bar { y }  }_{ i }) } \quad =\quad \frac { 1 }{ m } \sum _{ i=1 }^{ m }{ { -y }_{ i }\log { { \bar { y }  }_{ i } } -\quad (1-y) } \log { (1-{ \bar { y }  }_{ i }) }$
+
+##### neuron
+- neural net의 기본 구성 요소
+- weight, bias, adder, activation으로 구성
+- signal: weighted sum of input X ($\sum _{ i=1 }^{ w }{ { x }_{ i }{ w }_{ i } } + b$)
+- output = activation h(signal)
 
 
 ##### 기타 정보
