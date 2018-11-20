@@ -30,13 +30,16 @@ html header: <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/
 - logistic regression의 마지막에 softmax등을 이용해서 output value -> class label로 바꾸는 방식으로 classification을 만들 수 있음
 
 ##### linear regression
-- TOOD
+- 연속된 범위의 값을 추정
+- parameter: w, b
+- activation: identity(y = x)
+- cost: MSE(mean square error) J = $\frac { 1 }{ m } \sum _{ i=1 }^{ m }{ { ({ y }_{ i } - { \bar { y }  }_{ i }) }^{ 2 } }$
 
 ##### logisctic regression
 - probability estimation을 위한 linear model
 - parameter: w, b
 - activation: sigmoid
-- cost(log loss): J = $\frac { 1 }{ m } \sum _{ i=1 }^{ m }{ L({ y }_{ i },{ \bar { y }  }_{ i }) } \quad =\quad \frac { 1 }{ m } \sum _{ i=1 }^{ m }{ { -y }_{ i }\log { { \bar { y }  }_{ i } } -\quad (1-y) } \log { (1-{ \bar { y }  }_{ i }) }$
+- cost(log loss): J = $\frac { 1 }{ m } \sum _{ i=1 }^{ m }{ L({ y }_{ i },{ \bar { y }  }_{ i }) } = \frac { 1 }{ m } \sum _{ i=1 }^{ m }{ { -y }_{ i }\log { { \bar { y }  }_{ i } } -(1-{ y }_{ i }) } \log { (1-{ \bar { y }  }_{ i }) }$
 
 ##### neuron
 - neural net의 기본 구성 요소
