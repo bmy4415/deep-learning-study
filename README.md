@@ -1,5 +1,3 @@
-html header: <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
 ##### machine learning
 - 컴퓨터가 학습할 수 있도록 하는 알골리즘과 기술을 갭라하는 분야
 - data로부터 leanring하여 특정 task를 수행
@@ -20,7 +18,7 @@ html header: <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/
 ##### regularization
 - overfitting을 막기위해 사용하는 방법 중 하나로 hypathesis의 굴곡을 sharp -> flat하게 해주는 효과가 있음
 - cost function을 정의할 때 weight의 값을 더해주는 방식으로 구현 가능
-- ex) cost = $\sum(y-\bar{y})^2 + \lambda\sum(W^2)$
+- ex) cost = $cost=\sum { { (y-\bar { y } ) }^{ 2 } } +\lambda \sum { { \left| W \right|  }^{ 2 } }$
 
 ##### regression vs classification
 - regression: output이 continuous value임, ex) probability estimation
