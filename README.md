@@ -1,5 +1,5 @@
 ##### machine learning
-- 컴퓨터가 학습할 수 있도록 하는 알골리즘과 기술을 갭라하는 분야
+- 컴퓨터가 학습할 수 있도록 하는 알골리즘과 기술을 개발하는 분야
 - data로부터 leanring하여 특정 task를 수행
 
 ##### representation learning
@@ -15,8 +15,13 @@
 ##### cross validation, k-fold cross validation
 - 전체 data set이 너무 적어서 train set또는 validation set이 너무 적을 경우 명시적으로 validation set을 나누는 대신 test set을 제외한 모든 data set을 k개의 chunk로 나눈 후 각각의 chunk를 validation set으로 하는 k번의 train을 한 후에 각각의 결과의 평균을 validation 결과로 사용하는 방법
 
+##### normarlization
+- data의 scale을 맞추기 위해 처리해주는 일련의 행위들
+- data의 scale을 맞추지 않으면 일부 data가 다른 모든 data를 overwhelming하여 잘못된 결과가 도출될 수 있음
+- 통계적 의미의 standardization($x=\frac { x-\mu  }{ \sigma }$), normarlization($x=\frac { x-{ x }_{ min } }{ { x }_{ max }-{ x }_{ min } }$)을 모두 포함하는 것 같음
+
 ##### regularization
-- overfitting을 막기위해 사용하는 방법 중 하나로 hypathesis의 굴곡을 sharp -> flat하게 해주는 효과가 있음
+- ~~overfitting을 막기위해 사용하는 방법 중 하나로 hypathesis의 굴곡을 sharp -> flat하게 해주는 효과가 있음~~ **-->** overfitting을 막기위한 모든 방법을 통칭, L1 reg(cost에 |W| 추가), L2 reg(cost에 |W|^2 추가)
 - cost function을 정의할 때 weight의 값을 더해주는 방식으로 구현 가능
 - ex) cost = $cost=\sum { { (y-\bar { y } ) }^{ 2 } } +\lambda \sum { { \left| W \right|  }^{ 2 } }$
 
@@ -44,6 +49,11 @@
 - weight, bias, adder, activation으로 구성
 - signal: weighted sum of input X ($\sum _{ i=1 }^{ w }{ { x }_{ i }{ w }_{ i } } + b$)
 - output = activation h(signal)
+
+##### deep feedforward network
+- function approximator
+- input X에 대해 hidden layer에서 계산을 진행해나가고 그 결과로 Y가 도출됨(feed forward), 즉 information propagation이 한 방향으로만 이루어짐
+- feed back 없음 **-> RNN과 비교**
 
 
 ##### 기타 정보
