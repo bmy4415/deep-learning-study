@@ -55,6 +55,19 @@
 - input X에 대해 hidden layer에서 계산을 진행해나가고 그 결과로 Y가 도출됨(feed forward), 즉 information propagation이 한 방향으로만 이루어짐
 - feed back 없음 **-> RNN과 비교**
 
+##### one-hot encoding, one-hot vector
+- 범주형 data를 1차원 binary vector로 변환하는 방법
+- 필요성 -> 포도 = 0, 사과 = 1, 참외 = 2와 같이 single interger value로 값을 분류할 경우 avg(포도, 참외) = 1 = 사과, 즉 포도와 참외의 평균은 사과이다 등의 이상한 operation이 발생할 수 있음
+- classifier의 경우 class를 single integer value가 아니라 한개의 값만 1이고 나머지는 0인 size n(# of classes) vector로 나타낼 수 있음
+- ex) 0~9 digit classifier에서 [0, 1, 0, 0, 0, 0, 0, 0, 0, 0] = 1
+- 참고: https://hackernoon.com/what-is-one-hot-encoding-why-and-when-do-you-have-to-use-it-e3c6186d008f
+
+##### assignment 0-3
+- tf.placeholder : data를 받는 변수(input)
+- tf.Variable : model의 parameter, 즉 tf에서 optimize하면서 값이 바뀌는 변수
+- softmax: activation의 일종으로 n개의 입력을 받아서 각각의 입력이 0~1, 입력의 합은 1로 만들어 주는 함수, softmax의 결과값은 확률과 같은 역할 가능(각각 0과1사이의 양수이며 합이 1이므로)
+- cross entrophy: 정의 및 의미, http://blog.naver.com/PostView.nhn?blogId=gyrbsdl18&logNo=221013188633, classifier의 경우 cost function에 cross entrophy 이용
 
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
+- numpy는 매 실행마다 해당 operation에 대한 정보만 있지만 tensorflow는 computational graph 전체에 대한 정보가 있어서 일반적으로 더 빠름
