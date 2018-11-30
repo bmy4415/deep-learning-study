@@ -5,6 +5,10 @@
 ##### representation learning
 - 대상의 feature를 learning하는 것
 
+##### parameter vs hyper parameter
+- parameter: train 중에 machine에 의해 바뀌는 값들, 즉 weight와 bias
+- hyper parameter: 좋은 train을 위해 사람이 직접 바꿔주는 값들(learning rate, batch size 등)
+
 ##### train set, test set, validation set(dev set)
 - train set: 학습을 위한 data set
 - test set: 학습의 결과를 evaluate하기 위한 data set, 학습 중간에는 아에 사용하면 안됨
