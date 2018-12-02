@@ -76,6 +76,24 @@
 - max of f(x) : 모든 x에 대하여 f(x)가 취할수 있는 값 중 가장 큰 f(x)의 값
 - argmax of f(x) : f(x)가 가장 커지는 x의 값
 
+##### numpy broadcasting
+- shape: 각 dimension의 크기를 element로 갖는 tuple
+- dimension: 축(ex) x, y, z), array의 element를 select할 때 각각의 축을 건너야함
+- rank: # of dimnesion
+- ex) arr = np.array([[1,2], [3,4], [5,6]])의 경우 축(dimension)이 2개 ** -> 2번 select해야 특정 element에 접근 가능**, dimension이 2개이므로 **rank2인 array**, shape는 각 dimension의 크기를 element로 갖는 tuple이므로 **(3,2)**
+- broadcasting: numpy에서는 일반적으로 shape가 다른 array 간의 연산이 불가능한데, 특정 조건이 만족하면 array를 자동으로 변환해서 연산을 진행시켜 주는 것, ex) np.array([1,2,3]) + 3의 경우 array와 값을 계산해야하므로 계산이 불가능해야 하지만 broadcasting에 의해 각각의 element에 3을 더한 [4,5,6]을 return한다
+- 참고: http://sacko.tistory.com/16
+- broadcasting된 결과 shape 계산하기 -> https://docs.scipy.org/doc/numpy-1.10.1/user/basics.broadcasting.html#general-broadcasting-rules
+
+##### annealing learning rate
+- fixed size learning rate를 쓰는것 보다 점차적으로 작아지는 learning rate를 쓰는 것이 더 잘 train할 수 있음, 현실을 예시로 들어보면 미국 뉴욕에서 한국의 경복궁을 찾아갈 때, **비행기(new york -> 인천공항) -> 버스(인천공항 -> 광화문) -> 도보(광화문 -> 경복궁)**순으로 찾아가는 것 처럼 big leanring rate -> small learning rate를 통해 더 세밀한 training가능
+- how to annealing
+	- step decay: 매 n스텝마다 learning rate를 줄임, ex) 10스텝 마다 절반으로 줄임
+	- exponentially deacy: a = a0 * e^-kt, a0와 k는 hyper parameter, 즉 매 step마다 exponentially deacy함
+	- 1/t decay: a = a0 / (1 + kt), a0와 k는 hyper parameter
+	- k라는 hyper parameter에 대한 해석이 어렵기 때문에 step deacy를 사용하는 경우가 많음
+
+
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
 - numpy는 매 실행마다 해당 operation에 대한 정보만 있지만 tensorflow는 computational graph 전체에 대한 정보가 있어서 일반적으로 더 빠름
