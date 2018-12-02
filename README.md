@@ -93,6 +93,11 @@
 	- 1/t decay: a = a0 / (1 + kt), a0와 k는 hyper parameter
 	- k라는 hyper parameter에 대한 해석이 어렵기 때문에 step deacy를 사용하는 경우가 많음
 
+##### SGD(stochastic gradient descent) vs minibatch vs full batch
+- stochastic gradient descent: train set 중 하나만 뽑아서 그 gradient를 이용함
+- minibatch gradient descent: train set중 minibatch(m개)를 뽑아서 그 평균 gradient를 이용함
+- (full) batch gradient descent: 전체 train set을 모두 이용해서 gradient를 계산함
+- 보통 m = 2^n인 minibatch를 이용함(2^n인 이유는 memory에 fit할 때 속도가 빠르기 때문)
 
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
