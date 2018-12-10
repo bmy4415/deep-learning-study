@@ -99,6 +99,19 @@
 - (full) batch gradient descent: 전체 train set을 모두 이용해서 gradient를 계산함
 - 보통 m = 2^n인 minibatch를 이용함(2^n인 이유는 memory에 fit할 때 속도가 빠르기 때문)
 
+##### non-linearity
+- activation function으로 non-linear function인 sigmoid, ReLU, tanh 등을 사용하며 특히 여러겹의 layer를 쌓아서 효과를 보려면 반드시 non-linear function을 사용해야한다. *y = c1x, y = c2x* 2개의 linear function으로 layer를 쌓는다고 가정하자. 그러면 2번째 layer의 activation은 c2(c1x) = c1c2x 이므로 이는 *y = c1c2x*인 한개의 layer로 표현이 가능하다. 즉 activation으로 linear function을 이용하여 layer를 쌓는 것은 의미가 없다.
+
+##### CNN(Convolutional Neural Network)
+- 일반적인 DNN(Deep Feed Forward Neural Network)에서는 현재 layer와 다음 layer사이에 fully connected 되어 있다. 특히 크기가 큰 image의 경우 input layer에서 1d vector화 할 때 vector의 size가 매우 커지고 이로 인해 hidden layer의 weights의 갯수가 매우 빠르게 늘어난다. 예를들어 color image이고 256 x 256 픽셀크기인 이미지는 1d vector화 했을 때 한개의 neuron에 무려 256x256x3(=196608) 개의 weights가 필요하다. Too many parameters는 overfitting의 위험이 있다. 그래서 **CNN에서는 입력을 이미지로 가정하고 이미지에 적합한 아키텍쳐를 이용한다.(convolution layer)**
+- fully connected layer
+	- 이전 layer와 현재 layer 간의 모든 neron이 연결된 layer
+- 특징
+	- local connectivity
+	- parameter sharing(= 커널 = filter)
+	- pooling/subsampling hidden units
+
+
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
 - numpy는 매 실행마다 해당 operation에 대한 정보만 있지만 tensorflow는 computational graph 전체에 대한 정보가 있어서 일반적으로 더 빠름
