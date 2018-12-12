@@ -109,7 +109,31 @@
 - 특징
 	- local connectivity
 	- parameter sharing(= 커널 = filter)
-	- pooling/subsampling hidden units
+	- pooling/subsampling hidden units (pooling layer)
+
+- pooling layer
+	- 주로 down sampling의 목적(width, height를 줄여줌)
+	- max pooling: 해당 region에서 가장 큰 값만 가져옴
+
+##### Many CNN architectures
+- AlexNet
+	- conv -> pooling -> normal -> conv -> pooling -> normal -> conv -> conv -> conv -> FC -> FC -> FC
+	- 즉 conv와 pooling과 normal과 FC를 순차적으로 배열
+
+- ZFNet
+	- AlexNet과 구조는 같으나 hyperparameter(filter size, # of filters)를 바꿔서 더 좋은 결과 만듬
+
+- VGG Net
+	- ZFNet이나 AlexNet과 거의 같은데 filter size를 줄이는 대신 더 deep하게 layer를 쌓음
+	- 7x7 1 layer == 3x3 3 layer(size의 측면에서), but less parameters(7x7=49, 3x3x3=27) and deeper(non-linearity를 더 잘 활용가능)
+
+- GoogLeNet
+	- 어떤 filter size가 좋을지 모르니 다양한 filter size를 모두 이용
+	- 특히 filter size 별로는 parallel하게 계산할 수 있는 장점이 있음
+	- 문제는 filter를 굉장히 많이 사용하므로 계산량이 너무 많음
+	- 문제 해결을 위해 **inception module**을 도입
+	- inception module은 **1x1 convolution layer를 이용한 dimension reduction**으로 계산량을 확 줄여줌
+	- 그 결과 계산량 뿐만아니라 parameter의 수도 확 줄어듬
 
 
 ##### 기타 정보
