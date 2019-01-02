@@ -104,27 +104,53 @@
 
 ##### CNN(Convolutional Neural Network)
 - 일반적인 DNN(Deep Feed Forward Neural Network)에서는 현재 layer와 다음 layer사이에 fully connected 되어 있다. 특히 크기가 큰 image의 경우 input layer에서 1d vector화 할 때 vector의 size가 매우 커지고 이로 인해 hidden layer의 weights의 갯수가 매우 빠르게 늘어난다. 예를들어 color image이고 256 x 256 픽셀크기인 이미지는 1d vector화 했을 때 한개의 neuron에 무려 256x256x3(=196608) 개의 weights가 필요하다. Too many parameters는 overfitting의 위험이 있다. 그래서 **CNN에서는 입력을 이미지로 가정하고 이미지에 적합한 아키텍쳐를 이용한다.(convolution layer)**
+- 한줄 정의: convolution operation을 사용하는 layer가 포함된 neural network
+	- convolution operation은 kernel의 feature를 detect 한다
+	- 내적과 유사한 operation으로 값이 크게나오면 비슷하다고 생각할 수 있음(두 벡터의 내적에서 값이 클수록 같은 방향을 의미하므로)
 - fully connected layer
 	- 이전 layer와 현재 layer 간의 모든 neron이 연결된 layer
 - 특징
+	- grid topology에 대하여 잘 작동함
+		- time series(1d grid)
+		- image(2d grid)
+		- video(3d grid)
 	- local connectivity
-	- parameter sharing(= 커널 = filter)
+		- insight: 예를 들어 '입' 이라는 특징을 detect 할 때 근접한 pixel만 보면됨
+	- parameter sharing(= 커널 = filter) => parameter 수가 적음
+		- insight: 어떤 image에서 유용한 feature였다면, 같은 image의 다른 위치 또는 다른 이미지에서도 유용한 feature일 것이다
+		- 똑같은 갯수의 neuron을 output으로 만들고자 할 때 fully connected와 비교해보면 훨씬 더 적은 parameter 사용
 	- pooling/subsampling hidden units (pooling layer)
 
 - pooling layer
-	- 주로 down sampling의 목적(width, height를 줄여줌)
+	- 주로 down sampling의 목적(width, height를 줄여줌) => parameter의 갯수와 계산량을 줄여줌 => but 정보 손실의 영향으로 줄여가는 추세
 	- max pooling: 해당 region에서 가장 큰 값만 가져옴
+
+- 1x1 filter
+	- spatial(widht and height)는 그대로 유지하고 depth를 adjust 하는 용도로 사용 ex) GoogLeNet의 inceoption module
+	- activation 추가 가능
+	- FC layer와 유사한 역할을 할 수 있음
+		- input의 neuron의 갯수가 FC layer를 통과한 후 output neruon의 갯수로 바뀜
+		- 1x1 conv에서도 input의 depth가 1x1 filter 갯수에 의해 output depth로 바뀜
+
+- dilated convolution
+	- filter를 그대로 input에 긁는게 아니라 중간에 dilation rate를 두고 긁음
+	- ex) 3x3 filter를 input의 5x5 영역에 긁음 (dilation rate=2)
+	- 똑같은 갯수의 parameter로 더 넓은 영역을 탐색할 수 있음
+- tranposed convolution
+	- upsampling(작은 image => 큰 image)에 사용 가능
+
 
 ##### Many CNN architectures
 - AlexNet
 	- conv -> pooling -> normal -> conv -> pooling -> normal -> conv -> conv -> conv -> FC -> FC -> FC
 	- 즉 conv와 pooling과 normal과 FC를 순차적으로 배열
+	- ReLU를 최초로 사용
 
 - ZFNet
 	- AlexNet과 구조는 같으나 hyperparameter(filter size, # of filters)를 바꿔서 더 좋은 결과 만듬
 
 - VGG Net
-	- ZFNet이나 AlexNet과 거의 같은데 filter size를 줄이는 대신 더 deep하게 layer를 쌓음
+	- ZFNet이나 AlexNet과 거의 같은데 **filter size를 줄이는 대신 더 deep하게 layer를 쌓음 => small/deeper network**
 	- 7x7 1 layer == 3x3 3 layer(size의 측면에서), but less parameters(7x7=49, 3x3x3=27) and deeper(non-linearity를 더 잘 활용가능)
 
 - GoogLeNet
@@ -134,6 +160,43 @@
 	- 문제 해결을 위해 **inception module**을 도입
 	- inception module은 **1x1 convolution layer를 이용한 dimension reduction**으로 계산량을 확 줄여줌
 	- 그 결과 계산량 뿐만아니라 parameter의 수도 확 줄어듬
+
+- ResNet
+	- 여기서부터 layer가 매우 deep 해짐
+	- 기본적으로 neural net이 깊어질수록(deeper) vanishing gradient 이슈로 train이 잘 안됨
+	- input 'x'로 부터 output 'H(x)'를 학습하는 대신, f(x) = h(x) - x, 즉 원래 원하던 output 과의 차이(residual)을 학습함
+	- 그 결과 망이 깊어져도 학습이 더 잘됨
+	- TODO: ResNet 논문 읽어보기(https://arxiv.org/abs/1512.03385)
+	- Wide ResNet
+		- depth 보다 residual이 important factor 이다
+		- depth 대신에 width를 늘려보자, 즉 filter의 갯수를 늘려보자
+			- filter를 늘려도 계산은 parallel하게 할 수 있는 장점이 있음
+	- TODO
+		- ResNext => https://arxiv.org/abs/1611.05431
+		- SENet
+			- https://arxiv.org/abs/1709.01507
+			- https://jayhey.github.io/deep%20learning/2018/07/18/SENet/
+		- stochastic depth => https://arxiv.org/abs/1603.09382
+
+
+##### weight and bias initialization
+- gradient 기반 optimizer에서 매우 중요
+- if 모든 weight을 0으로 initialize => 모든 neuron의 activation이 같음 => no asymmetry => train이 잘 안됨
+- if weight을 너무 작은 값으로 initialize => 모든 activation이 0이되고 gradient도 0이됨 => train이 잘 안됨
+- if weight을 너무 큰 값으로 initialize => 모든 activation이 saturate됨 => train이 잘 안됨
+- 결국 **적절한** 값으로 weight를 잘 초기화 해야함
+	- intuition: z = simga(i: 1~n)(WiXi), 즉 n이 커지면 Wi가 그에 따라 작아져야 비슷한 z가 나옴 => weight를 n과 관련지어서 초기화 해보자
+	- xavier initialization: Var(W) = 1 / n^in
+		- sigmoid 등의 activation과 잘 맞음
+	- xavier variant: Var(W) = 2 / (n^in + n^out)
+		- sigmoid 등의 activation과 잘 맞으며 back propagation에도 좋음
+	- he initialization: xavier 계열은 종종 ReLU activation과 잘 안맞음 => Var(W) = 2 / n^in 이용
+- bias는 0으로 set하는 것으로 충분하다(asymmetry를 만드는 것은 weight로 충분함)
+
+##### batch normalization
+- weight initialization은 초기 activation의 분포를 이쁘게 만들어주는 효과가 있었음
+
+
 
 
 ##### 기타 정보
