@@ -32,7 +32,62 @@ def conv_forward(x, w, b, conv_param):
     ##############################################################################
     #                          IMPLEMENT YOUR CODE                               #
     ##############################################################################
-    pass
+    
+    import math
+    
+    # adjust padding to images
+    # images: array of shape (N, H, W, C)
+    # lt: # of paddings at left and top
+    # rd: # of paddings at ridht and down
+    def adjust_padding(images, left, right, top, bottom):
+        return np.pad(x, [(0,0), (top, bottom), (left, right), (0,0)], 'constant', constant_values=0)
+    
+    N, H, W, C = x.shape
+    F, WH, WW, C = w.shape
+    _, SH, SW, _ = conv_param['stride']
+    out = None
+    
+    # valid padding
+    if conv_param['padding'] == 'valid':
+        l_padding, r_padding, t_padding, b_padding = 0, 0, 0, 0
+        OH, OW = math.ceil((H-WH+1) / SH), math.ceil((W-WW+1) / SW)
+        
+        
+    # same padding
+    elif conv_param['padding'] == 'same':
+        OH = math.ceil(H / SH)
+        OW = math.ceil(W / SW)
+        
+        PH = (OH-1)*SH - H + WH
+        PW = (OW-1)*SW - W + WW
+        t_padding = math.floor(PH/2)
+        b_padding = PH - t_padding
+        l_padding = math.floor(PW/2)
+        r_padding = PW - l_padding
+        
+    padded_x = adjust_padding(x, l_padding, r_padding, t_padding, b_padding)
+    out = np.zeros((N, OH, OW, F), dtype=np.float32)
+
+    for N_idx, image in enumerate(padded_x):
+        out_maps = np.zeros((OH, OW, F), dtype=np.float32)
+        for F_idx, kernel in enumerate(w):
+            activation_map = np.zeros((OH, OW), dtype=np.float32)
+            
+            for h_idx in range(OH):
+                for w_idx in range(OW):
+                    h_start = SH * h_idx
+                    h_end = h_start + WH
+                    w_start = SW * w_idx
+                    w_end = w_start + WW
+
+                    receptive_field = image[h_start:h_end, w_start:w_end, :]
+                    activation_map[h_idx, w_idx] = np.sum(np.multiply(receptive_field, kernel))
+                    
+            activation_map += b[F_idx] # add bias
+            out_maps[:, :, F_idx] = activation_map
+            
+        out[N_idx, :, :, :] = out_maps
+        
     ##############################################################################
     #                             END OF YOUR CODE                               #
     ##############################################################################
@@ -56,7 +111,63 @@ def conv_backward(dout, cache):
     ##############################################################################
     #                          IMPLEMENT YOUR CODE                               #
     ##############################################################################
-    pass
+    
+    import math
+    def adjust_padding(images, left, right, top, bottom):
+        return np.pad(x, [(0,0), (top, bottom), (left, right), (0,0)], 'constant', constant_values=0)
+    
+    x, w, b, conv_param = cache
+    N, H, W, C = x.shape
+    F, WH, WW, _ = w.shape
+    _, SH, SW, _ = conv_param['stride']
+    padding = conv_param['padding']
+    _, OH, OW, _ = dout.shape
+    
+    dx = np.zeros_like(x)
+    dw = np.zeros_like(w)
+    db = np.zeros_like(b)
+    
+    # calculate number of paddings
+    if padding == 'valid':
+        l_pad, r_pad, t_pad, b_pad = 0, 0, 0, 0
+    elif padding == 'same':
+        oh = math.ceil(H / SH) # out height
+        ow = math.ceil(W / SW) # out width
+        PH = (oh-1)*SH - H + WH # pad height
+        PW = (ow-1)*SW - W + WW # pad width
+        t_pad = math.floor(PH/2)
+        b_pad = PH - t_pad
+        l_pad = math.floor(PW/2)
+        r_pad = PW - l_pad
+        
+        assert(OH == oh)
+        assert(OW == ow)
+
+    padded_x = adjust_padding(x, l_pad, r_pad, t_pad, b_pad)
+    padded_dx = adjust_padding(dx, l_pad, r_pad, t_pad, b_pad)
+    
+    # dx: filter wise sum, each dx at each batch
+    # dw: batch wise mean, each dw at each filter
+    # db: batch wise mean
+    
+    for n_idx in range(N):
+        for f_idx in range(F):
+            for oh_idx in range(OH):
+                for ow_idx in range(OW):
+                    h_start = SH * oh_idx
+                    h_end = h_start + WH
+                    w_start = SW * ow_idx
+                    w_end = w_start + WW
+                    padded_dx[n_idx, h_start:h_end, w_start:w_end, :] += w[f_idx, :, :, :] * dout[n_idx, oh_idx, ow_idx, f_idx]
+                    dw[f_idx, :, :, :] += padded_x[n_idx, h_start:h_end, w_start:w_end, :] * dout[n_idx, oh_idx, ow_idx, f_idx]
+                    db[f_idx] += 1
+                    
+        # dx[n_idx, :, :, :] = padded_dx 에서 패딩 제외하고 가져오기
+        dx[n_idx, :, :, :] = padded_dx[n_idx, t_pad:H+t_pad, l_pad:W+l_pad, :]
+        
+    dw /= N # batch wise mean
+    db /= N # batch wise mean
+    
     ##############################################################################
     #                             END OF YOUR CODE                               #
     ##############################################################################
@@ -82,7 +193,33 @@ def max_pool_forward(x, pool_param):
     ##############################################################################
     #                          IMPLEMENT YOUR CODE                               #
     ##############################################################################
-    pass
+    import math
+    
+    N, H, W, C = x.shape
+    p_h = pool_param['pool_height']
+    p_w = pool_param['pool_width']
+    _, SH, SW, _ = pool_param['stride']
+    OH, OW = math.floor((H-p_h) / SH) + 1, math.floor((W-p_w) / SW) + 1
+    
+    out = np.zeros((N, OH, OW, C), dtype=np.float32)
+    for N_idx, input_layer in enumerate(x):
+        activation_channels = np.zeros((OH, OW, C), dtype=np.float32)
+        for C_idx in range(C):
+            activation_map = np.zeros((OH, OW), dtype=np.float32) # activation map at channel C
+            for h_idx in range(OH):
+                for w_idx in range(OW):
+                    h_start = h_idx * SH
+                    h_end = h_start + p_h
+                    w_start = w_idx * SW
+                    w_end = w_start + p_w
+                    max_value = np.max(input_layer[h_start:h_end, w_start:w_end, C_idx])
+                    activation_map[h_idx, w_idx] = max_value
+                    
+            activation_channels[:, :, C_idx] = activation_map
+            
+
+        out[N_idx, :, :, :] = activation_channels
+    
     ##############################################################################
     #                             END OF YOUR CODE                               #
     ##############################################################################
@@ -106,7 +243,37 @@ def max_pool_backward(dout, cache):
     ##############################################################################
     #                          IMPLEMENT YOUR CODE                               #
     ##############################################################################
-    pass
+    
+    import math
+    
+    N, OH, OW, C = dout.shape
+    x, pool_param = cache
+    _N, H, W, _C = x.shape
+    _, SH, SW, _ = pool_param['stride']
+    PH = pool_param['pool_height']
+    PW = pool_param['pool_width']
+    
+    assert(N == _N)
+    assert(C == _C)
+    
+    assert(OH == math.ceil((H-PH+1) / SH))
+    assert(OW == math.ceil((W-PW+1) / SW))
+
+    # only implement valid padding
+    # dx: channel wise, batch wise
+    dx = np.zeros_like(x)
+    
+    for n_idx in range(N):
+        for c_idx in range(C):
+            for oh_idx in range(OH):
+                for ow_idx in range(OW):
+                    h_start = oh_idx * SH
+                    h_end = h_start + PH
+                    w_start = ow_idx * SW
+                    w_end = w_start + PW
+                    dx[n_idx, h_start:h_end, w_start:w_end, c_idx] = \
+                        np.equal(x[n_idx, h_start:h_end, w_start:w_end, c_idx], dout[n_idx, oh_idx, ow_idx, c_idx]).astype(int)
+    
     ##############################################################################
     #                             END OF YOUR CODE                               #
     ##############################################################################
@@ -154,7 +321,7 @@ def Test_conv_forward(num):
                                  [[ -5.37212623e-01,   1.58679851e+00],
                                   [ -8.75827502e-01,   2.01722547e+00],
                                   [ -6.79865772e-01,   8.78673426e-01]]]])
-        
+
     return _rel_error(out, correct_out)
 
 
@@ -179,6 +346,7 @@ def Test_max_pool_forward():
                              [[ 0.15369128,  0.15771812,  0.16174497]]],
                             [[[ 0.33489933,  0.33892617,  0.34295302]],
                              [[ 0.4557047,   0.45973154,  0.46375839]]]])
+    
     return _rel_error(out, correct_out)
 
 def _eval_numerical_gradient_array(f, x, df, h=1e-5):

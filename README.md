@@ -120,6 +120,19 @@
 		- insight: 어떤 image에서 유용한 feature였다면, 같은 image의 다른 위치 또는 다른 이미지에서도 유용한 feature일 것이다
 		- 똑같은 갯수의 neuron을 output으로 만들고자 할 때 fully connected와 비교해보면 훨씬 더 적은 parameter 사용
 	- pooling/subsampling hidden units (pooling layer)
+- filter
+	- input image와 convolution operation을 수행하는 parameters
+- padding
+	- convolution, pooling을 적용할 때 input image의 상하좌우에 붙여주는 0
+	- padding과 stride로 output의 width와 height를 조절할 수 있다
+- stride
+	- convolution, pooling을 적용할 때, filter를 몇칸씩 건너 뛰면서 이동할 것인지를 나타냄
+	- padding과 함께 사용되는데 stride가 1일 때와 1보다 클 때가 헷갈릴 수 있다
+		- https://www.tensorflow.org/api_guides/python/nn#Convolution 참고
+		- same padding
+			- out = ceil(in / stride)
+		- valid padding
+			- out = ceil((in - filter + 1) / stride)
 
 - pooling layer
 	- 주로 down sampling의 목적(width, height를 줄여줌) => parameter의 갯수와 계산량을 줄여줌 => but 정보 손실의 영향으로 줄여가는 추세
