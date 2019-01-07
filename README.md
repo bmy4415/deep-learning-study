@@ -208,6 +208,32 @@
 
 ##### batch normalization
 - weight initialization은 초기 activation의 분포를 이쁘게 만들어주는 효과가 있었음
+- normalization(x' = (x-mean) / std) + linear transform(y = ax + b)로 이루어짐(a, b는 learn 해야할 parameter)
+- higher learning rate, regularizer의 효과가 있음
+- batch에 dependent함(각 minibatch 마다 mean과 std를 구함)
+	- RNN, GAN, RL, online-learning 등에서 사용하기 힘듬
+	- batch independent normalizer
+		- weight norm: https://arxiv.org/pdf/1602.07868.pdf
+		- layer norm(sequential model에 잘 작동): https://arxiv.org/pdf/1607.06450.pdf
+		- instance norm(sequential model에 잘 작동)
+		- group norm(video recognition에 잘 작동): https://arxiv.org/pdf/1803.08494.pdf
+- 결론
+	- dnn, cnn => batch norm 사용 시도
+	- rnn, gan rl => batch independent normalizer 사용 고려
+- TODO: 6. training art 32page 공부 더하기
+	- 구글링
+	- batch norm 논문
+
+##### training tips
+- hyper parameters
+	- coarse-to-fine sampling
+		- 처음에 넓은 범위에 작은 epochs로 train을 하다가 좁은 범위에 큰 epochs로 변경
+		- grid search 대신 random sampling을 이용
+		- sampling 할 때
+			- binary/discrete => sample from bernoulli / multinoulli distribution
+			- real valued => uniform / log-uniform(usually better)
+- capacity는 높게하고 regularization을 철저히 할 것
+
 
 
 
