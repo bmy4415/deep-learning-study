@@ -234,7 +234,15 @@
 			- real valued => uniform / log-uniform(usually better)
 - capacity는 높게하고 regularization을 철저히 할 것
 
-
+##### saliency map
+- https://arxiv.org/pdf/1312.6034.pdf 참고
+- 주어진 image I에 대해서 I의 각 pixel이 I의 class score(S)에 대하여 미치는 영향을 나타냄
+- 구하는 방법
+	1. input image의 class=1, other=0인 vector V를 만듬
+	2. vector V의 input image I에 대한 gradient를 구함
+	3. gradient의 절댓값을 취함
+	4. input image I가 grey scale이면(channel이 1개인 경우) 3의 결과가 saliency map
+	5. input image I가 multi channel이면(channel이 여러개인 경우) 3의 결과에 channel-wise max를 취하면 saliency map
 
 
 
