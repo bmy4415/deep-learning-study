@@ -234,15 +234,84 @@
 			- real valued => uniform / log-uniform(usually better)
 - capacity는 높게하고 regularization을 철저히 할 것
 
-##### saliency map
-- https://arxiv.org/pdf/1312.6034.pdf 참고
-- 주어진 image I에 대해서 I의 각 pixel이 I의 class score(S)에 대하여 미치는 영향을 나타냄
-- 구하는 방법
-	1. input image의 class=1, other=0인 vector V를 만듬
-	2. vector V의 input image I에 대한 gradient를 구함
-	3. gradient의 절댓값을 취함
-	4. input image I가 grey scale이면(channel이 1개인 경우) 3의 결과가 saliency map
-	5. input image I가 multi channel이면(channel이 여러개인 경우) 3의 결과에 channel-wise max를 취하면 saliency map
+##### paper study: Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps
+- source: https://arxiv.org/pdf/1312.6034.pdf 참고
+- Abstract
+	- trained cnn model을 visualization 하는 방법을 다룸
+	- 첫째로 class score를 maximize하는 image를 generate 해봄 => conv net이 capture하는 개념을 visualize 해줌
+	- 둘째로 (given image, given class)에 대한 saliency map을 compute 해봄 => weakly supervised object localization에 사용 가능, image에서 class score에 기여하는 부분을 highlight 해줌
+	- deconvolutional network와 gradient-based convnet visualization 사이의 연관성에 대해 언급
+- Introduction
+	- cnn이 large scale image recognition problem에서 성공한 architecture가 되면서 cnn이 capture하는 visual appearance에 대해 연구가 늘어남
+    - 이전에 unsupervised DBN, auto-encoder에 대한 visualization에 대한 시도가 있었음
+	- cnn에 대해서는 deconvolutional network로 visualize 하려는 시도가 있었음
+	- 이 논문에서는 pre-trained cnn model을 이용하여 (이전 연구들과 비교하여) 다음의 3가지를 성취
+		- (human level에서) understandable한 visualization에 성공
+			- Erhan의 연구를 최초로 cnn에 적용
+		- given image, given class에 대하여 single back propagation을 통해 pixel wise 기여도를 구하는 방법을 제시 => saliency map
+			- 이는 추후에 weakly supervised object localization에 이용 가능
+		- gradient-based visualization 방법이 deconvolution network의 일반화된 방법임에 대하여 설명(conv layer 뿐만아니라 다양한 layer에 사용 가능)
+- Class Model Visualization
+	- input: trained model S, class C
+	- output: image
+	- pre-train된 model을 이용하여 주어진 class의 class score을 maximize하는 image를 generate 해내는 방법
+	- Sc(I)를 image I의 class c에 대한 score라고 할 때, objective = Sc(I) - labmda * (l2 norm of I)^2 을 maximize하는 I를 찾아내면 됨
+		- lambda: regularization parameter
+		- cnn train과 유사하게 back propagation을 이용해서 local optima를 찾을 수 있음
+		- objective를 maximize하므로 gradient descent가 아니라 gradient aescent 이용
+		- model의 weight를 바꾸는 것이 아니라 input image I를 바꿈
+		- image generate 방법
+			1. I를 random noise로 초기화(필요하다면 normalize 추가)
+			2. forward propagation을 통해 objective 값 계산
+			3. backward propagation을 통해 objecitve에 대한 I의 gradient를 구함
+			4. I += learnging rate * gradient (gradient aescent)
+			5. 2~4의 과정을 반복
+		- softmax의 결과인 probability distribution이 아니라, 그 이전 값인 unnormalized score를 이용하는 이유
+			- intuition: softmax의 결과는 target class의 score를 증가시켜도 되지만, 나머지 class의 score를 감소시켜도 되므로 원래의 목표인 class score의 maximization과 살짝 다름
+			- 실험해 봤더니 probability를 쓴 경우 결과 image가 understandable 하지 않음
+- Image-Specific Class Saliency Visualization
+	- input: trained model S, image I, class C
+	- output: saliency map
+	- image I의 class C에 대한 각 pixel의 기여도를 나타냄
+	- 그러므로 input image의 spatial shape(H,W) == saliency map의 shape
+	- Sc(I) = (Sc(I)에 대한 I의 gradient) * I + b => 1차 테일러 근사에서 출발
+		- Sc(I)에 대한 I의 gradient를 grad라고 하면, grad 자체가 I의 score에 대한 기여로 해석 가능
+			- grad의 특정 위치값이 크다 => 이 위치의 값이 score의 변화에 큰 영향을 준다 => 이 위치가 중요한 pixel이다
+		- saliency map 구하는 방법
+			1. input image I를 forward pass를 거쳐 class score를 구함 (softmax 이전의 값)
+			2. 1의 결과 중 target class에 해당하는 값만을 extract
+			3. 2의 결과의 input image I에 대한 gradient를 구함(d(2.의 결과) / dI)
+			4. 3의 결과에 절대값(absolute)을 취함 -> 영향력의 크기를 보기 위해, 음수의 경우도 영향력이 크다고 할 수 있음
+			5. input image의 scale에 따라
+				- grey scale이면 4의 결과의 shape이 (H,W)이고 이 자체가 saliency map임
+				- multi-channel이면 4의 결과의 shape이 (H,W,C)이고 이것을 channel-wise max를 취하면 shape이 (H,W)가 되고 이것이 saliency map임
+	- weakly supervised object localization에 관련된 부분은 graph cut image segmentation 등 다른 부분에 대한 지식이 필요하여 skip(TODO)
+- Relation to Deconvolutional Networks
+	- deconvnet-based reconstruction과 gradient based visualization의 비교
+	- 사실의 이 둘이 거의 비슷함
+		- 둘다 backward propagation을 통해 image를 generate함
+		- conv layer
+			- X^(n+1) = Xn ** Kn (** => convolution operation)
+			- gradient based: grad(Xn) = grad(X^(n+1)) ** flipped(Kn)
+			- deconvnet based: Rn = R^(n+1) ** flipped(Kn)
+		- relu layer
+			- X^(n+1) = max(Xn, 0)
+			- gradient based: grad(Xn) = grad(X^(n+1)) * 1 if Xn > 0
+			- deconvnet based: Rn = R^(n+1) * 1 if R^(n+1) > 0
+			- gradient based에서는 n번째 layer를 보고 grad(Xn)값을 정하지만, deconvnet based에서는 (n+1)번째 layer를 보고 Rn 값을 정하는 차이가 있음
+		- max pooling layer
+			- X^(n+1)(p) = (max(q) for q in region p)
+			- gradient based: grad(Xn) = grad(X^(n+1)) if Xn is max in corresponding region
+			- deconvnet based: 'switch'? in deconvnet(deconvnet 논문을 읽어야 알 수 있을듯함)
+		- 위와 같은 이유로 deconvnet과 gradient based back propagation visualization이 equivalent하다고 할 수 있음
+		- 또한 gradient based는 conv layer 뿐만아니라 어떤 종류의 layer에도 사용 가능
+- Conclusion
+	- 이 paper에서 2가지 visualization technique를 제시함
+		- generate artificial image that maximizes class score
+		- image-specific class saliency map
+	- saliency map은 graph-cut image segmentation에도 활용 가능(segmentation이나 detection model에 대한 train없이도 가능)
+	- gradient based visualization과 deconvolutional network 사이의 연결성에 대한 언급
+	- 후속 연구로 saliency map을 이용하여 learning하는 방법에 대한 연구를 하면 좋을듯 함
 
 
 
