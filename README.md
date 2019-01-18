@@ -313,6 +313,13 @@
 	- gradient based visualization과 deconvolutional network 사이의 연결성에 대한 언급
 	- 후속 연구로 saliency map을 이용하여 learning하는 방법에 대한 연구를 하면 좋을듯 함
 
+##### norm
+- vecotr의 길이나 크기(magnitude)를 측정하는 방법
+- ![equation](https://latex.codecogs.com/gif.latex?%7B%20L%20%7D_%7B%20p%20%7D%3D%7B%20%28%5Csum%20_%7B%20i%20%7D%5E%7B%20n%20%7D%7B%20%7B%20%5Cleft%7C%20%7B%20x%20%7D_%7B%20i%20%7D%20%5Cright%7C%20%7D%5E%7B%20p%20%7D%20%7D%20%29%20%7D%5E%7B%20%5Cfrac%20%7B%201%20%7D%7B%20p%20%7D%20%7D)
+- p를 차수라고 하고 L1, L2 norm을 주로 사용
+- ![equation](https://latex.codecogs.com/gif.latex?%7B%20L%20%7D_%7B%201%20%7D%3D%5Cleft%7C%20x_%7B%201%20%7D%20%5Cright%7C%20&plus;%5Cleft%7C%20%7B%20x%20%7D_%7B%202%20%7D%20%5Cright%7C%20&plus;...%5Cleft%7C%20%7B%20x%20%7D_%7B%20n%20%7D%20%5Cright%7C)
+- ![equation](https://latex.codecogs.com/gif.latex?%7B%20L%20%7D_%7B%202%20%7D%3D%5Csqrt%20%7B%20%7B%20%7B%20x%20%7D_%7B%201%20%7D%20%7D%5E%7B%202%20%7D&plus;%7B%20%7B%20x%20%7D_%7B%202%20%7D%20%7D%5E%7B%202%20%7D&plus;...%7B%20%7B%20x%20%7D_%7B%20n%20%7D%20%7D%5E%7B%202%20%7D%20%7D)
+- 참고 http://taewan.kim/post/norm/
 
 
 ##### 기타 정보
