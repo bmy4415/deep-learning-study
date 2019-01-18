@@ -313,6 +313,72 @@
 	- gradient based visualization과 deconvolutional network 사이의 연결성에 대한 언급
 	- 후속 연구로 saliency map을 이용하여 learning하는 방법에 대한 연구를 하면 좋을듯 함
 
+##### paper study: Understanding Neural Networks Through Deep Visualization
+- source: http://yosinski.com/media/papers/Yosinski__2015__ICML_DL__Understanding_Neural_Networks_Through_Deep_Visualization__.pdf
+- Abstract
+	- DNN, CNN 등에서 좋은 성과(performance)를 내는 등 발전이 많았음
+	- 그러나 중간 과정(hidden layer)에서 어떤 일을 하는지에 대해서는 black box인 상태
+	- 중간 과정을 visualize, interpret 할 수 있다면 더 나은 intuition을 통해 발전 가능
+	- 이 논문에서 visualize, interpret과 관련하여 2가지 tool을 제시
+		- image, video input에 대하여 trained convnet의 각 layer마다의 activation을 visualize해주는 software를 개발 - input의 변화에 따라 activation의 변화를 바로바로 확인 가능
+		- regularized optimization을 통해 각 layer가 capture하는 **recognizable**한 image를 생성하는 방법 제시, 이전의 방법들과 비교하여 더 다양한 regularizer를 사용하였고 더 understandable한 image를 생성 가능
+	- 위의 2가지 tool은 모두 pre-trained convnet에 대하여 사용 가능
+- Introduction
+	- faster computing(GPU 등), training technique(dropout 등), activation(relu 등) 등의 발전으로 high performance를 내는 architecture가 많이 발전해왔음
+	- 그러나 hidden layer에서 어떤 일을 하는지에 대한 understading은 여전히 부족
+		- layer가 깊어지고 parameter가 많아지고 각 neuron이 복잡하게 연결되어 있어서 분석이 힘듬
+	- hidden layer가 하는 일에 대해서 분석할 수 있다면 더 나은 architecture를 만드는데에 intuition을 줄 것임 -> ex) deconvnet에서 smaller filter size에 대한 영감을 얻어서 ZFnet이 ImageNet 2013 우승함
+	- visualization을 통해 newcomer들에게 network에 대하여 쉽게 설명할 수 있음
+	- 첫번째 tool(software)은 static image나 live video를 input으로 받아서 input에 대한 각 layer의 activation을 visualize 해줌
+	- 두번째 tool에서 trained CNN의 각 layer가 어떤 feature를 train했는지 visualize 할 수 있는 방법을 제시(regularize technique 설명)
+	- 그 이전 연구들에 대하여 설명
+- Visualizing Live Convnet Activations
+	- 개발한 software에 대해서 설명
+	- FC layer만으로 이루어진 network의 경우 neuron의 순서가 의미가 없어서 vector을 visualize 하는 것이 큰 의미가 없음(단 CNN에서 마지막 FC layer는 학습된 image의 조합을 통해 classification을 하므로 의미가 있음)
+	- CNN의 경우 conv layer에서의 activation들은 local connectivity가 있으므로 activation vector를 plot 하는 것이 spatial한 의미가 있음
+	- 이 software를 이용해서 얻은 intuition
+		- 어떤 feature를 detect 할 때, all layer에 걸쳐서 하나의 feature를 detect 하지 않고 하나의 특정 layer에서 complex feature를 detect하는 layer들이 존재 했음
+		- Google이나 Flickr에서 들어오는 image에 대해서는 전반적으로 classification 정확도가 높았지만 webcam(video input)에 대해서는 그렇지 않았음. 그 이유 중 하나는 training 때 보지 못한 class의 object가 input으로 들어왔기 때문이라고 추론할 수 있음
+- Visualizing via Regularized Optimization
+	- 이 paper에서 적용한 regularization에 대하여 설명
+	- ![equation](https://latex.codecogs.com/gif.latex?obj%3D%7B%20a%20%7D_%7B%20i%20%7D%28x%29-%7B%20R%20%7D_%7B%20%5Ctheta%20%7D%28x%29)
+	- R-theta는 L2 norm을 의미, 그 후에 x를 update 할 때 다음과 같이 update함
+	- ![equation](https://latex.codecogs.com/gif.latex?x%5Cleftarrow%20%7B%20r%20%7D_%7B%20%5Ctheta%20%7D%28x&plus;%5Ceta%20%5Cfrac%20%7B%20%5CDelta%20obj%20%7D%7B%20%5CDelta%20x%20%7D%20%29)
+	- r-theta는 다음의 4가지 regularization을 모두 적용함
+		- L2 decay
+			- L2 decay는 small number of extreme values가 결과에 dominant 하게 되는 것을 방지해줌
+			- ![euqation](https://latex.codecogs.com/gif.latex?%7B%20r%20%7D_%7B%20%5Ctheta%20%7D%3D%281-%7B%20%5Ctheta%20%7D_%7B%20decay%20%7D%29%5Cbullet%20x)
+		- Gaussian blur
+			- gradient aescent로 image를 generate하면 high-frequency image가 나오는데, 이는 activation을 크게 해주지만 인간의 눈으로 보기에 real하지 않음
+			- 그래서 Gaussian blur를 통해 frequency를 낮춰주었음 -> parameter: bandwidth
+			- 이 blur operation은 매우 expensive하기 때문에 매 iteration마다 할 수는 없고, every n step마다 수행하였음 -> parameter: every n step
+			- blur operation을 small bandwidth로 여러번 할 경우 큰 band width로 한번 수행한 것과 equivalent한 결과를 나타내며, 특히 여러 번의 blur 동안 input image가 조금씩 변해도 전체 결과가 (큰 bandwidth로 한번 수행한 결과와)similiar하게 나오는 효과가 있음
+			- parameter: ![euqation](https://latex.codecogs.com/gif.latex?%7B%20%5Ctheta%20%7D_%7B%20b%5C_%20width%20%7D%5Cquad%20/%5Cquad%20%7B%20%5Ctheta%20%7D_%7B%20b%5C_%20every%20%7D)
+		- Clipping pixels with small norm
+			- 위의 2가지 regularizer를 적용한 후에 남은 image x에는 많은 non-zero value가 있는데, 이것들 하나하나가 activation에 기여하지만 이를 전부 나타내지 말고 main object만 나타내고 싶고(특징이 두드러 질 수 있도록), 그래서 각 pixel의 norm을 계산하여 norm이 threshold인 ![equation](https://latex.codecogs.com/gif.latex?%7B%20%5Ctheta%20%7D_%7B%20n%5C_%20pct%20%7D) 보다 작은 pixel은 전부 0으로 만들어줌
+		- Clipping pixels with small contribution
+			- norm이 적은 pixel을 지워내는 방법 외에 activation에 대한 contribution이 작은 pixel을 지워낼수 있음(pixel 값을 0으로 만들 수 있음)
+			- activation에 대한 pixel의 기여도를 확인하는 방법에는 다음의 2가지가 있음
+				1. 
+					- 직접 각 pixel들을 0으로 만든 후에 activation의 변화량을 측정함, 다음의 수식에서 '_j'는 j번째 pixel을 0으로 만든 image를 의미함
+					- ![equation](https://latex.codecogs.com/gif.latex?%5Cleft%7C%20%7B%20a%20%7D_%7B%20i%20%7D%28x%29-%7B%20a%20%7D_%7B%20i%20%7D%28%7B%20x%20%7D_%7B%20%5C_%20j%20%7D%29%20%5Cright%7C)
+					- 모든 pixel에 대하여 직접 0으로 만든 후 difference를 측정하기 때문에 cost가 매우 큼
+				2. 
+					- 위의 방법 대신 activation을 linear approximate 할 수 있음
+						- ![equation](https://latex.codecogs.com/gif.latex?y%3Dax&plus;b%2Ca%3D%5Cfrac%20%7B%20%5CDelta%20y%20%7D%7B%20%5CDelta%20x%20%7D)
+					- activation에 대한 contribution은 ![equation](https://latex.codecogs.com/gif.latex?%5Cleft%7C%20%5Csum%20_%7B%20c%20%7D%5E%7B%20%7D%7B%20%28x%5Ccirc%20%5Cfrac%20%7B%20%5CDelta%20%7B%20a%20%7D_%7B%20i%20%7D%28x%29%20%7D%7B%20%5CDelta%20x%20%7D%20%29%20%7D%20%5Cright%7C)로 측정할 수 있음
+					- 절대값을 이용하는 이유는 어떤 방향이든(activation이 커지는/작아지는) 영향력의 크기를 확인하기 위함임
+					- 이 때, 특정 pixel을 0으로 만들어서 activation을 크게하는 operation을 수행할 수 있지만, 이와 관련된 것은 gradient aescent에서 이미 수행하는 것이므로 이 단계에서는 수행하지 않음.
+					- 영향력의 크기가 threshold인 ![equation](https://latex.codecogs.com/gif.latex?%7B%20%5Ctheta%20%7D_%7B%20c%5C_%20pct%20%7D) 보다 작은 pixel은 0으로 만들어줌
+		- 위의 4가지 regularizer는 개별적으로(individually) 수행되었을 때 효과가 있지만 특히, 같이(combined) 적용할 경우 효과가 더 커짐. 이 점이 이전의 연구와 우리의 연구의 차이점임.
+	- combined hyperparamter를 고르기 위해 random search를 이용
+- Discussion and Conclusion
+	- live visualization software를 통해 상위 layer에서 하나의 layer 자체가 complex feature를 detect 함을 확인할 수 있었음(여러 layer에 distributed되지 않고)(단, 모든 layer가 그렇다는 것은 아님) -> 마지막 쪽의 FC layer만 조정해서 transfer learning이 가능함
+	- combination of regularizer를 통해
+		- 개별적으로 효과가 있는 것들을 combine해서 더 좋은 결과가 나올 수 있음
+		- 기존에 discriminative network는 input을 generate하기에 적절하지 않다는 연구가 많았지만, 이는 prior(modeling)이 weak 해서 그랬던 것 같음(우리의 경우, discriminative network에서 충분히 recognizable한 image generate에 성공하였음)
+		- 즉 discriminative에서 non-discriminative information을 무시하는 것이 아니라 여전히 hidden layer 어딘가에 해당 정보를 contain하고 있음
+
 ##### norm
 - vecotr의 길이나 크기(magnitude)를 측정하는 방법
 - ![equation](https://latex.codecogs.com/gif.latex?%7B%20L%20%7D_%7B%20p%20%7D%3D%7B%20%28%5Csum%20_%7B%20i%20%7D%5E%7B%20n%20%7D%7B%20%7B%20%5Cleft%7C%20%7B%20x%20%7D_%7B%20i%20%7D%20%5Cright%7C%20%7D%5E%7B%20p%20%7D%20%7D%20%29%20%7D%5E%7B%20%5Cfrac%20%7B%201%20%7D%7B%20p%20%7D%20%7D)
