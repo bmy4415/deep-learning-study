@@ -378,6 +378,13 @@
 		- 개별적으로 효과가 있는 것들을 combine해서 더 좋은 결과가 나올 수 있음
 		- 기존에 discriminative network는 input을 generate하기에 적절하지 않다는 연구가 많았지만, 이는 prior(modeling)이 weak 해서 그랬던 것 같음(우리의 경우, discriminative network에서 충분히 recognizable한 image generate에 성공하였음)
 		- 즉 discriminative에서 non-discriminative information을 무시하는 것이 아니라 여전히 hidden layer 어딘가에 해당 정보를 contain하고 있음
+- supplementary
+	- http://yosinski.com/deepvis 참고
+		- 'natural image prior' == 'regularization' : activation을 maximize하는 동시에 natural image와 비슷하게 보이려는 노력을 통칭함
+		- CNN을 크게 conv layer과 FC layer로 나누어서 생각하면, conv layer에서 local connectivity를 통해 simple feature를 detect하고 top layer쪽의 FC layer에서 feature를 combine하여 complex and abstract representation을 learn한다고 생각할 수 있음
+		- image classification 과정에서 의도하지 않았던(명시적 학습 목표가 아닌) feature를 학습함(ex)bowtie classification을 위해 face를 학습함, bowtie는 주로 face와 함께 등장하기 때문에)
+		- 특정 neuron 1개가 특정 feature(ex) face, ear 등)을 학습할 수 있음(이는 feature가 여러 neuron에 distribute 되어 있어서 single neuron으로는 아무것도 확인할 수 없다는 주장과 상반됨)
+		- 지금까지는 discriminative DNN이 non-discriminative한 feature를 무시한다고 생각해왔었는데, 이 실험결과에 따르면 그렇지 않다(hidden layer에서 classification과 직접 관련되지 않은 feature도 capture한다). 그러면 personal robot 등도 train 과정에서 그럴 수 있고, train 과정에서 input으로 사용 되는 image의 어떤 feature가 의도치 않게 hidden layer에서 capture 될 수 있다는 것을 의미한다. 즉 robot 청소기가 청소를 위해 input image로 train을 할 때, 의도치 않게 내 모습을 train할 수 있고, 이는 privacy problem과 연결될 수 있다.
 
 ##### norm
 - vecotr의 길이나 크기(magnitude)를 측정하는 방법
