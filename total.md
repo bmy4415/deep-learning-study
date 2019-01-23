@@ -390,12 +390,25 @@
 		- 지금까지는 discriminative DNN이 non-discriminative한 feature를 무시한다고 생각해왔었는데, 이 실험결과에 따르면 그렇지 않다(hidden layer에서 classification과 직접 관련되지 않은 feature도 capture한다). 그러면 personal robot 등도 train 과정에서 그럴 수 있고, train 과정에서 input으로 사용 되는 image의 어떤 feature가 의도치 않게 hidden layer에서 capture 될 수 있다는 것을 의미한다. 즉 robot 청소기가 청소를 위해 input image로 train을 할 때, 의도치 않게 내 모습을 train할 수 있고, 이는 privacy problem과 연결될 수 있다.
 
 ##### norm
-- vecotr의 길이나 크기(magnitude)를 측정하는 방법
+- vecotr의 길이나 크기(magnitude)를 측정하는 방법 -> **loss를 vectorize한다면 loss에 사용할 수 있고, weight도 vector로 생각할 수 있기 때문에 weight normalization에도 사용 가능**
 - ![equation](https://latex.codecogs.com/gif.latex?%7B%20L%20%7D_%7B%20p%20%7D%3D%7B%20%28%5Csum%20_%7B%20i%20%7D%5E%7B%20n%20%7D%7B%20%7B%20%5Cleft%7C%20%7B%20x%20%7D_%7B%20i%20%7D%20%5Cright%7C%20%7D%5E%7B%20p%20%7D%20%7D%20%29%20%7D%5E%7B%20%5Cfrac%20%7B%201%20%7D%7B%20p%20%7D%20%7D)
 - p를 차수라고 하고 L1, L2 norm을 주로 사용
 - ![equation](https://latex.codecogs.com/gif.latex?%7B%20L%20%7D_%7B%201%20%7D%3D%5Cleft%7C%20x_%7B%201%20%7D%20%5Cright%7C%20&plus;%5Cleft%7C%20%7B%20x%20%7D_%7B%202%20%7D%20%5Cright%7C%20&plus;...%5Cleft%7C%20%7B%20x%20%7D_%7B%20n%20%7D%20%5Cright%7C)
 - ![equation](https://latex.codecogs.com/gif.latex?%7B%20L%20%7D_%7B%202%20%7D%3D%5Csqrt%20%7B%20%7B%20%7B%20x%20%7D_%7B%201%20%7D%20%7D%5E%7B%202%20%7D&plus;%7B%20%7B%20x%20%7D_%7B%202%20%7D%20%7D%5E%7B%202%20%7D&plus;...%7B%20%7B%20x%20%7D_%7B%20n%20%7D%20%7D%5E%7B%202%20%7D%20%7D)
 - 참고 http://taewan.kim/post/norm/
+
+##### bucketing / binning
+- continuous value를 bucket 단위의 discrete 단위로 변환하는 행위
+- ex) 0~10도 사이의 온도는 0.1도의 민감도(sensitivity)에서 각각 (0~0.1), (0.1~0.2) .. (0.9~10)의 100가지 bucket으로 변환할 수 있다
+
+##### confusion matrix
+- classification의 예측 성공률을 요약한 표
+- class label이 N개일 경우 NxN 행렬로 나타낼 수 있음(axis1=label, axis2=prediction)
+
+##### embedding
+- continuous value로 표현된 categorical data
+- 일반적으로 고차원 vector를 저차원 vector로 mapping 시키는 것을 의미함
+
 
 
 ##### 기타 정보
