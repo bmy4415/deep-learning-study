@@ -1,5 +1,5 @@
 ##### machine learning
-- 컴퓨터가 학습할 수 있도록 하는 알골리즘과 기술을 개발하는 분야
+- 컴퓨터가 학습할 수 있도록 하는 알고리즘과 기술을 개발하는 분야
 - data로부터 leanring하여 특정 task를 수행
 
 ##### representation learning
@@ -409,7 +409,14 @@
 - continuous value로 표현된 categorical data
 - 일반적으로 고차원 vector를 저차원 vector로 mapping 시키는 것을 의미함
 
-
+##### deep leanring vs machine learning
+- machine learning
+	- logic based algorithm이 아니라 data based algorithm 즉 data로 부터 learning하는 방법
+- deep learning
+	- machine learning의 한 분야로서 deep neural network를 이용하는 방법
+- **주요 차이**
+	- machine learning에서는 data의 feature를 hard-coding(hand-written)함, 즉 직접 알아내야함
+	- deep learning에서는 data의 feature를 hidden layer를 통해 automatically 알아냄
 
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
