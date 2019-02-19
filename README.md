@@ -7,3 +7,4 @@
 ### histories
 - 2019.01.21 - total.md 수식 적용
 - 2019.02.17 - machine learning vs deep learning 차이 정리
+- 2019.02.18 - pytorch official tutorial 완료
