@@ -144,3 +144,4 @@ dmypy.json
 
 # data files
 *.csv
+pytorch_turorial/DEEP_LEARNING_WITH_PYTORCH:_A_60_MINUTE_BLITZ/data
