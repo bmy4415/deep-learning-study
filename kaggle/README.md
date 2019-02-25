@@ -1,4 +1,4 @@
-# learned
+## learned
 - `%matplotlib inline` => inline으로 figure 그려줌
 - `%matplotlib qt5` or `%matplotlib tk` => qt5나 tk를 이용하여 새로운 창에 figure 그려줌
 - `seaborn`
@@ -16,3 +16,11 @@
     - continuous feature
         - 연속값(숫자 등)을 갖는 feature, 어떤 두 feature의 사이값으로 feature가 존재할 수 있음
         - ex) 우리의 feature 중 Age
+
+## About correlation
+- Only numeric features can have correaltion(Alpahbet, String cannot have correaltion normarlly)
+- If increase in feature A leads to increase in feature B, then they are positively correlated.
+- Value 1 means perfect positive correaltion
+- If increase in feature A leads to decrease in feature B, then they are negatively correlated.
+- Value -1 means perfect negative correlation
+- If correlation between A and B are about 1, then increase in A leads to increase in B. This means that A and B are very similar feature

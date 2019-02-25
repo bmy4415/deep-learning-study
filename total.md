@@ -418,6 +418,14 @@
 	- machine learning에서는 data의 feature를 hard-coding(hand-written)함, 즉 직접 알아내야함
 	- deep learning에서는 data의 feature를 hidden layer를 통해 automatically 알아냄
 
+##### About correlation
+- Only numeric features can have correaltion(Alpahbet, String cannot have correaltion normarlly)
+- If increase in feature A leads to increase in feature B, then they are positively correlated.
+- Value 1 means perfect positive correaltion
+- If increase in feature A leads to decrease in feature B, then they are negatively correlated.
+- Value -1 means perfect negative correlation
+- If correlation between A and B are about 1, then increase in A leads to increase in B. This means that A and B are very similar feature
+
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
 - numpy는 매 실행마다 해당 operation에 대한 정보만 있지만 tensorflow는 computational graph 전체에 대한 정보가 있어서 일반적으로 더 빠름
