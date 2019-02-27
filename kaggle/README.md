@@ -24,3 +24,41 @@
 - If increase in feature A leads to decrease in feature B, then they are negatively correlated.
 - Value -1 means perfect negative correlation
 - If correlation between A and B are about 1, then increase in A leads to increase in B. This means that A and B are very similar feature
+
+## confusion matrix terminology
+- Table that specifies classfication performance
+- axis1: label, axis2: predicted
+- terms
+    - True Positive(TP): label=Positive and prediction=Negative
+    - True Negative(TN): label=Negative and prediction=Positive
+    - False Positive(FP): label=Negative and prediction=Positive // Type1 Error
+    - False Negative(FN): label=Positive and prediction=Neagtive // Type2 Error
+    - P = TP + FN
+    - N = TN + FP
+    - total = P + N = TP + TN + FP + FN
+    - Accuracy
+        - how often is the classifier correct
+        - (TP+TN)/total
+    - Misclassification Rate
+        - == Error Rate
+        - how often is the classifier incorrect
+        - (FN+FP)/total = 1 - Accuracy
+    - True Positive Rate(TPR)
+        - == Sensitivity, Recall, Hit rate
+        - When label=Positive, how often prediction=Positive?
+        - TP/P = TP / (TP+FN)
+    - False Positive Rate(FPR)
+        - When label=Negative, how often prediction=Positive?
+        - FP/N = FP / (TN+FP)
+    - True Neagtive Rate(TNR)
+        - == Specificity
+        - When label=Negative, how often prediction=Negative?
+        - TN/N = TN / (TN+FP)
+    - False Negative Rate(FNR)
+        - When label=Positive, how often prediction=Negative?
+        - FN/P = FN / (TP+FN)
+    - TPR + FNR = 1
+    - FPR + TNR = 1
+    - Precision
+        - When prediction=True, how often label=True?
+        - TP/(TP+FP)
