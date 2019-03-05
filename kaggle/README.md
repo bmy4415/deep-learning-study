@@ -80,3 +80,9 @@
         - ada boost(adaptive boosting): more weight on previous `mis-predicted` sample
         - gradient boosting: learn `residual error` of previous model
 - reference: https://excelsior-cjh.tistory.com/166
+
+## Conclusion
+- should analyze data before select/adapt model
+    - As same with `design before coding`
+- visualization exercise using seaborn
+- review many train models

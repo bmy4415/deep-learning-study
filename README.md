@@ -10,4 +10,4 @@
 - 2019.02.18 - pytorch official tutorial 완료
 - 2019.02.25 - correlation 정리
 - 2019.02.27 - confusion matrix terminology 정리
-- 2019.03.05 - ensemble 정리
+- 2019.03.05 - ensemble 정리, kaggle-titanic 마무리
