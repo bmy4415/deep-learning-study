@@ -62,3 +62,21 @@
     - Precision
         - When prediction=True, how often label=True?
         - TP/(TP+FP)
+
+## Ensembling
+- in short, combine multiple `weak` models to make it `strong`
+- how to ensemble
+    - voting
+        - collect each result of models and select the most voted one
+    - bagging / pasting
+        - both bagging and pasting use multiple similar models
+        - both bagging and pasting resample from original data
+        - bagging(bootstap aggregating): resample allowing duplicate
+        - pasting: resample dis-allowing duplicate
+        - train multiple model `parallel`
+    - boosting(ada / gradient)
+        - train multiple model `sequentially`
+        - the next model focus on the `weak` point of the previous one
+        - ada boost(adaptive boosting): more weight on previous `mis-predicted` sample
+        - gradient boosting: learn `residual error` of previous model
+- reference: https://excelsior-cjh.tistory.com/166

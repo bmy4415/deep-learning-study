@@ -463,6 +463,25 @@
 ##### Convert string values to numeric
 - In many machine learning models, we cannot handle string directly. So we will convert string values into numeric values
 
+##### Ensembling
+- in short, combine multiple `weak` models to make it `strong`
+- how to ensemble
+    - voting
+        - collect each result of models and select the most voted one
+    - bagging / pasting
+        - both bagging and pasting use multiple similar models
+        - both bagging and pasting resample from original data
+        - bagging(bootstap aggregating): resample allowing duplicate
+        - pasting: resample dis-allowing duplicate
+        - train multiple model `parallel`
+    - boosting(ada / gradient)
+        - train multiple model `sequentially`
+        - the next model focus on the `weak` point of the previous one
+        - ada boost(adaptive boosting): more weight on previous `mis-predicted` sample
+        - gradient boosting: learn `residual error` of previous model
+- reference: https://excelsior-cjh.tistory.com/166
+
+
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
 - numpy는 매 실행마다 해당 operation에 대한 정보만 있지만 tensorflow는 computational graph 전체에 대한 정보가 있어서 일반적으로 더 빠름
