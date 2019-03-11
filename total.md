@@ -481,6 +481,107 @@
         - gradient boosting: learn `residual error` of previous model
 - reference: https://excelsior-cjh.tistory.com/166
 
+##### RNN(recurrent neural network)
+- CNN vs RNN
+	- CNN: specialized for `grid data`
+	- RNN: specialized for `sequential data` => ![equation](https://latex.codecogs.com/gif.latex?%7B%20x%20%7D_%7B%20t%20%7D%3Df%28%7B%20x%20%7D_%7B%201%20%7D%2C%5Cquad%20%7B%20x%20%7D_%7B%202%20%7D%2C%5Cquad%20...%2C%5Cquad%20%7B%20x%20%7D_%7B%20t-1%20%7D%29)
+- RNN capability
+	- 1 to m: ex) image caption generation: image => sentence
+	- m to 1: ex) sentimental classification: sentence => category
+	- m to n: ex) machine translation
+	- m to m: ex) video frame classification
+- why use RNN rather than MLP
+	- input and output can be variable length
+		- MLP handles fixed length input and ouput
+		- ex) machine translation: my name is jaewan(4) => 내 이름은 재완이야(3).
+	- no sharing parameters across different position of sequence
+		- require too many parameters for each position of sequence
+		- too many parameters lead to overfitting(same as in CNN)
+- parameter sharing: CNN vs RNN
+	- CNN: share kernel across each region in image
+	- RNN: share weights across timewise(position wise) in sequence
+		- weights for `next state` and `current output`
+- benefits of RNN
+	- handle sequence of variable length
+	- reduce number of parameters
+		- if we assign parameter for each position, too many parameters
+		- also we cannot handle unseen sequence of unseen length
+- 1d CNN vs RNN
+	- 1d CNN
+		- output: sequence
+		- each member of output: output of each neighboring region in `input`
+		- parameter sharing: same kernel
+	- RNN
+		- output: sequence
+		- each member of output: output of `accumulated input` == output of `previous output`
+		- parameter sharing: same rule applied to each output
+			- parameter for `next state` and `current output`
+- RNN parameters
+	- ![equation](https://latex.codecogs.com/gif.latex?W_%7B%20hh%20%7D%2C%7B%20W%20%7D_%7B%20hx%20%7D%2C%7B%20W%20%7D_%7B%20yh%20%7D%2C%7B%20b%20%7D_%7B%20h%20%7D%2C%7B%20b%20%7D_%7B%20y%20%7D)
+	- h means state
+	- ![equation](https://latex.codecogs.com/gif.latex?%7B%20h%20%7D_%7B%20t%20%7D%3Dactivation%28%7B%20W%20%7D_%7B%20hh%20%7D%7B%20h%20%7D_%7B%20t-1%20%7D&plus;%7B%20W%20%7D_%7B%20hx%20%7D%7B%20x%20%7D_%7B%20t%20%7D&plus;%7B%20b%20%7D_%7B%20h%20%7D%29)
+	- ![equation](https://latex.codecogs.com/gif.latex?%7B%20y%20%7D_%7B%20t%20%7D%3Dactivation%28%7B%20W%20%7D_%7B%20yh%20%7D%7B%20h%20%7D_%7B%20t%20%7D&plus;%7B%20b%20%7D_%7B%20y%20%7D%29)
+- h == hidden state
+	- lossy summary of accumulated input sequence
+	- necessarily lossy beacuse state is fixed size whether accumulate input sequence (may be) very long
+	- state keep features of `previous input sequence` `selectively and precisely` => make state `richer and representful`
+- language modeling
+	- approximate probability distribution given sequence
+		- ex) P('apple and pair salad') = 0.01, P('apple and pear salad') = 0.5, then we will predict `pear` as blank word in `apple and <blank> salad`
+- word embedding
+	- most of NN takes numeric values as their input
+	- mapping from `word sequence` to `numeric vector(not one-hot)`
+	- similar meaning words will have similar representation
+		- ex) embed('mom') - embed('daughter') ~= embed('dad') - embed('son')
+- if well trained, RNN can learn dependencies across long steps but `hard to train well`
+	- RNN shares parameters(W) timewise, thus product same parameter multiple times
+		- largest singular value > 1 : `exploding`
+			- easier to detect than vanishing
+			- gradient clipping
+				- clip gradients to a small number whenever they explode
+				- if grad_norm > threshold: grad *= (threshold / grad_norm)
+		- largest singular value < 1 : 'vanishing'
+			- IRNN
+				- use `relu` activation
+				- initialize W to I instead of random values
+			- LSTM
+				- before: weights is independent to time
+					- product `same weights` many times
+				- LSTM: weight is dependent to time using `gate`
+					- actually weights is same but `gate control weights before product`
+					- some should be remembered, other should be forgotten => gate control these
+					- 2 recurrences
+						- h(t): hidden state(same as vanilla RNN)
+						- c(t): cell state
+							- sematically, remember or forget previous dependence
+							- only composed of `element-wise matrix multiplication` from input gate rather than `weights` => potentially different values at every time step => `gradient highway`
+							- similar to `resnet residual connection`
+
+
+##### teacher forcing
+- 2 types of rnn model
+	- hidden to hidden recurrence
+		- hidden state of prior time step becomes input of current time step
+	- output to hidden recurrence
+		- `output of prior time step` becomes input of current time step
+		- in training time, there can be `new sequence` not exists in train sequence and these 'new sequence' leads to wrong output word and, make training slower and worse
+		- so we use `actual word` instead of `output of prior step` in training time and still use `output of prior step` in test time => This is called `teacher forcing` training method
+
+##### comparison between MLP, CNN, RNN
+- MLP
+	- applicable to all types of data
+	- regression problem(predict real-value)
+	- classification problem
+	- if input data is tabular
+- CNN
+	- strong for grid type data(local connectivity / spartial relation)
+	- image input
+	- also used at text data, time series data, sequence data(because of spartial relation)
+- RNN
+	- for sequence data(accumulative previous data has effect on current output)
+	- text data / time series data
+	- in natural, hard to train
+	- not proper for `tabular data and image data`
 
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
