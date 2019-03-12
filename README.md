@@ -12,3 +12,4 @@
 - 2019.02.27 - confusion matrix terminology 정리
 - 2019.03.05 - ensemble 정리, kaggle-titanic 마무리
 - 2019.03.11 - RNN 정리
+- 2019.03.12 - batch normalization 정리

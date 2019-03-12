@@ -226,6 +226,33 @@
 - TODO: 6. training art 32page 공부 더하기
 	- 구글링
 	- batch norm 논문
+		- 문제 상황
+			- 보통 NN train을 할 때 SGD사용 / learning rate를 높여서 빠르게 train 하고싶음
+			- learning rate 잘못높이면 gradient exploding 발생함
+		- 해결책
+			- gradient 관련 문제의 원인은 `internal covariate shift`임
+				- train data와 test data의 분포가 다른 것
+				- 각 layer마다의 input 분포가 다른 것
+					- 각 layer의 parameter는 현재 layer 뿐만아니라 다른 모든 layer에 의해 gradient가 결정되므로 다른 layer의 input 분포가 바뀌는 것에 영향을 받음
+			- 그러므로 `internal covariate shift`를 줄이자 == 모든 layer의 input의 분포를 일정하게 만들어주자
+				- 방법1(naive appraoch)
+					- 모든 layer의 input을 ~N(0,1)로 만들어주자(`whitening`)
+						- covariance matrix를 구하기 매우 힘듬(cost가 큼)
+						- 매 train step마다 전체 input에 대한 mean, std를 구하기 어려움(cost가 큼)
+				- 방법2(simplication)
+					- input data의 각 차원이 모두 independent하다고 생각하고 차원별로 normalize 수행
+					- train때는 batch에 대한 mean/std를 구하고 test(inference)때는 train때 구해놓은 것들을 이용
+						- batch norm은 batch에 dependent한데, test때도 dependent하면 안되므로
+		- 효과
+			- 큰 learning rate 설정 가능
+			- batch에 따라서 mean/std가 바뀌므로 더 다양한 data에 대하여 학습하는 효과(generalization)
+				- 각 epoch마다 batch를 중복을 허용하지 않고 shuffling하는게 좋음
+		- 주의점
+			- batch norm을 쓸거면 learning rate를 크게해보기
+			- dropout 제거하기
+			- l2 regularization 줄이기
+			- learning rate decay 더 빠르게하기
+			- train set shuffling 추가하기
 
 ##### training tips
 - hyper parameters
