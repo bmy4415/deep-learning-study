@@ -616,6 +616,16 @@
 - tf.truncated_normal -> tf.initializers.he_normal()로 initializer를 바꿨더니 학습이 급격하게 잘됨
 - dropout 추가했더니 학습이 급격하게 잘됨
 - tensorflow lazy property
+	- 1model = 1class 형태로 유지하는 것이 좋음
+	- model이 제공하는 interface
+		- placeholder
+		- train/evaluation/inference 관련 함수
+			- loss, logit, pred, accuracy, error rate 등
+			- optimizer를 정의하는 것은 밖으로 빼서 사용할 수도 있음
+				- 다양한 방식으로 optimize 함수를 설계할 수 있으므로
+	- 전체 graph를 하나의 생성자만을 이용하여 생성하면
+		- 생성자의 특성상 최초 1회 실행된다는 장점이 있음
+		- 대신 복잡한 graph를 그리는 경우 코드가 지저분해지고 복잡해짐
 	- tensorflow의 모든 function을 call하면 전체 graph에 추가가 됨
 	- graph에 원치않는 component가 추가되는 것을 막기 위해 function decorator 등을 이용하여 최초 1회의 call에만 graph에 추가하고 그 이후의 call에서는 graph에 추가하지 않도록 하는 방법이 있음
 		- tf.Variable() 뿐만 아니라 tf.zeros() 등도 계속 추가가 됨을 확인하였음
