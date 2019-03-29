@@ -615,3 +615,9 @@
 - numpy는 매 실행마다 해당 operation에 대한 정보만 있지만 tensorflow는 computational graph 전체에 대한 정보가 있어서 일반적으로 더 빠름
 - tf.truncated_normal -> tf.initializers.he_normal()로 initializer를 바꿨더니 학습이 급격하게 잘됨
 - dropout 추가했더니 학습이 급격하게 잘됨
+- tensorflow lazy property
+	- tensorflow의 모든 function을 call하면 전체 graph에 추가가 됨
+	- graph에 원치않는 component가 추가되는 것을 막기 위해 function decorator 등을 이용하여 최초 1회의 call에만 graph에 추가하고 그 이후의 call에서는 graph에 추가하지 않도록 하는 방법이 있음
+		- tf.Variable() 뿐만 아니라 tf.zeros() 등도 계속 추가가 됨을 확인하였음
+		- lazy property 또는 lazy loading이라고 함
+	- 참고: https://danijar.com/structuring-your-tensorflow-models/

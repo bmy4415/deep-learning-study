@@ -13,3 +13,4 @@
 - 2019.03.05 - ensemble 정리, kaggle-titanic 마무리
 - 2019.03.11 - RNN 정리
 - 2019.03.12 - batch normalization 정리
+- 2019.03.29 - tensorflow lazy property 정리
