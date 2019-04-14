@@ -627,13 +627,54 @@
 	- (2x2행렬 예시), 행렬식 == det(A) == <img src='./imgs/equation_6.png'>
 	- A의 eigenvalue <img src='./imgs/equation_7.png'>에 대해 <img src='./imgs/equation_8.png'>이 성립함
 - 대각화(diagonalization)
-	- NxN square matrix A의 eigenvalue와 eigenvector <img src='./imgs/equation_9.png'>에 대해서
-	- 고유벡터행렬 V를 <img src='./imgs/equation_10.png'> 라고 하자
-	- 대각성분을 eigenvalue 값으로 갖는 대각행렬을 고유값행렬 이라고 하자
-	- <img src='./imgs/equation_11.jpeg' width=150>
-	- A를 고유벡터행렬과 고유값행렬의 곱으로 나타내는 것을 `대각화(diagonalization)`이라고 함
+	- 행렬 A를 대각행렬을 포함한 행렬의 곱으로 나타내는 것을 대각화(diagonalization) 이라고 함
+		- eigen decompoisition(square matrix에 대해서만 가능)
+		- singular value decomposition(rectangle matrix에 대해서도 가능)
+		- 기타 등등
+	- eigen decomposition
+		- NxN square matrix A의 eigenvalue와 eigenvector (<img src='./imgs/equation_9.png'>)에 대해서
+		- 고유벡터행렬 V를 <img src='./imgs/equation_10.png'> 라고 하자
+		- 대각성분을 eigenvalue 값으로 갖는 대각행렬을 고유값행렬 이라고 하자
+		- A의 eigen decomposition <img src='./imgs/equation_11.jpeg' width=150>
 - 추후 사용처
 	- PCA(principal component analysis): 주요 성분 분석 == 고차원을(M)을 주요 성분을 이용하여 저차원(m)으로 줄일 수 있는 방법
+
+##### singular value decomposition(svd)
+- 행렬 대각화의 한가지 방법
+	- 행렬 대각화(diagonalization): 행렬 A를 대각행렬을 포함한 행렬의 곱으로 나타내는 것
+- <img src='./imgs/equation_12.png'> where
+	- U: (mxm) orthogonal matrix
+	- SIGMA: (mxn) diagonal matrix
+		- <img src='./imgs/equation_13.png'>
+		- <img src='./imgs/equation_14.png'> 두 행렬은 shape가 다른 matrix지만 rank(A)개의 eigenvalue를 공유함
+		- min(n, m)개의 value가 대각행렬의 값임
+		- 각각의 값은 관례적으로 descending order로 배치함(<img src='./imgs/equation_15.png'>)
+	- V: (nxn) orthogonal matrix
+- U와 V의 계산
+	- U: <img src='./imgs/equation_20.png'>의 eigen decompoistion한 결과의 V값(mxm)
+	- V: <img src='./imgs/equation_21.png'>의 eigen decompoistion한 결과의 V값(nxn)
+- svd의 기하학적 의미
+	- A(mxn)는 n차원 vector를 m차원으로 변환해주는 선형변환으로 볼 수 있음
+	- <img src='./imgs/equation_24.png'>
+	- orthogonal한 vector set V를 행렬 A를 이용해서 선형변환 했을 때(n차원 vector를 m차원 vector로 바꿨을 때) 그 결과가 크기는 SIGMA만큼 변하더라도 여전히 orthogonal한 vector set인 U를 찾자
+- svd의 사용 예시
+	- <img src='./imgs/equation_25.jpeg' width=200>
+	- <img src='./imgs/equation_26.png'>을 정보량의 크기로 생각하면 svd는 원래의 matrix A를 정보량의 크기에 따른 여러개의 layer로 나눠준다고 해석할 수 있음
+	- ex) image compression
+
+
+##### orthogonal matrix
+- `square matrix A`에 대해서 정의됨
+	- <img src='./imgs/equation_16.png'> 일 때 A를 orthogonal matrix라고 함
+	- 특징
+		- A의 열벡터 v들이 orthogonal함 == <img src='./imgs/equation_17.png'>
+		- A의 열벡터 v는 단위벡터임
+		- <img src='./imgs/equation_18.png'>
+- orthogonal and independent
+	- independent
+		- vector set V를 <img src='imgs/equation_22.png'>라고 하자
+		- vector set V에 대해서 <img src='./imgs/equation_23.png'>을 만족하면 vector V를 independent하다고 함
+	- vector set V가 orthogonal이면서 동시에 모든 v가 영벡터가 아니면 vector set V는 independent함
 
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)

@@ -14,3 +14,4 @@
 - 2019.03.11 - RNN 정리
 - 2019.03.12 - batch normalization 정리
 - 2019.03.29 - tensorflow lazy property 정리
+- 2019.04.14 - eigenvalue, eigenvector, svd 정리
