@@ -610,6 +610,31 @@
 	- in natural, hard to train
 	- not proper for `tabular data and image data`
 
+##### eigenvalue, eigenvector
+- for a given `square matrix A(nxn)`, if there exists `non-zero vector K(영벡터가 아닌 벡터)` and scalar <img src='./imgs/equation_2.png'> such that <img src='./imgs/equation_1.png'>, scalar is called `eigenvalue of A` and vector is called `eigenvector of A`
+- how to calculate eigenvalue(thereafter, eigenvector)
+	- <img src='./imgs/equation_3.jpeg' width=150>
+- 기하학적 의미
+	- 선형변환(linear map) A를 취했을 때 크기만 변하고 방향은 변하지 않는 영벡터가 아닌 벡터 K가 존재하는가? 만약 존재한다면 그 벡터를 eigenvector, 변하는 크기를 eigenvalue라고 한다.
+	- vector K가 square matrix A의 eigenvector면 scalar c에 대해서 cK도 matrix의 eigenvector가 됨 => 보통 단위벡터(크기가 1인 벡터)로 나타냄
+- 특성방정식(characteristic equation)
+	- <img src='./imgs/equation_4.png'>를 행렬 A의 특성방정식이라고 한다
+	- 특성방정식의 해가 eigenvalue가 됨 => nxn square matrix에 대해서 0~n개의 eigenvalue를 갖을 수 있음
+		- 중복을 같은 숫자로 보고 실수만 고려할 경우 eigenvalue가 0~n개 가능
+		- 중복을 다른 숫자로 보고 복소수까지 고려할 경우 eigenvalue가 항상 n개 존재
+- eigenvalue와 대각합, 행렬식의 관계
+	- 대각합 == tr(A) == <img src='./imgs/equation_5.png'>
+	- (2x2행렬 예시), 행렬식 == det(A) == <img src='./imgs/equation_6.png'>
+	- A의 eigenvalue <img src='./imgs/equation_7.png'>에 대해 <img src='./imgs/equation_8.png'>이 성립함
+- 대각화(diagonalization)
+	- NxN square matrix A의 eigenvalue와 eigenvector <img src='./imgs/equation_9.png'>에 대해서
+	- 고유벡터행렬 V를 <img src='./imgs/equation_10.png'> 라고 하자
+	- 대각성분을 eigenvalue 값으로 갖는 대각행렬을 고유값행렬 이라고 하자
+	- <img src='./imgs/equation_11.jpeg' width=150>
+	- A를 고유벡터행렬과 고유값행렬의 곱으로 나타내는 것을 `대각화(diagonalization)`이라고 함
+- 추후 사용처
+	- PCA(principal component analysis): 주요 성분 분석 == 고차원을(M)을 주요 성분을 이용하여 저차원(m)으로 줄일 수 있는 방법
+
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
 - numpy는 매 실행마다 해당 operation에 대한 정보만 있지만 tensorflow는 computational graph 전체에 대한 정보가 있어서 일반적으로 더 빠름
