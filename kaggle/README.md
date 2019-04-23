@@ -16,6 +16,9 @@
     - continuous feature
         - 연속값(숫자 등)을 갖는 feature, 어떤 두 feature의 사이값으로 feature가 존재할 수 있음
         - ex) 우리의 feature 중 Age
+- pandas isnull(), isna() are alias for each other
+- sns.regplot: data의 산점도와 linear regression 했을 때의 line을 그려줌
+
 
 ## About correlation
 - Only numeric features can have correaltion(Alpahbet, String cannot have correaltion normarlly)
@@ -81,8 +84,26 @@
         - gradient boosting: learn `residual error` of previous model
 - reference: https://excelsior-cjh.tistory.com/166
 
+## scaling vs normalization
+- 둘 다 numeric value에 대해서 적용
+- scaling
+    - range of data만 바꿔주고 shape of distribution은 안바꿔줌
+- normalization
+    - shape of distribution을 바꿔주는게 주요 목적
+    - shape of distribution을 바꾸면서 range도 자연스레 바뀔 수 있음
+    - 이름에서도 알 수 있듯이 normal distribution(정규분포)화 해주는 것
+    - `normal distribution을 가정하는 ML method를 적용하기위해 normalization을 해줘야함`
+
+
 ## Conclusion
+- 잘되는 model
+    - XGBoost
+    - lightgbm
+    - sklearn.ensemble.GradientBoost series
 - should analyze data before select/adapt model
     - As same with `design before coding`
 - visualization exercise using seaborn
-- review many train models
+- regression의 경우 target의 skew(), kurt() 등을 이용하여 정규분포와 얼마나 차이나는지 확인
+- categorical data => boxplot, numerical data => regplot, scatterplot 사용 고려
+- categorical data => sklearn.LabelEncoder 고려
+- 좋은 결과 나오면 반드시 코드 git에 commit하기
