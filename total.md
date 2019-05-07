@@ -4,6 +4,18 @@
 
 ##### representation learning
 - 대상의 feature를 learning하는 것
+- `2019.05.07 추가`
+- 똑같은 정보도 다양한 형태로 표현 가능
+	- <img src='./imgs/equation_27.png' width=200>
+		- xy좌표계와 극좌표계를 이용하여 똑같은 data를 다양한 방식으로 표현 가능
+		- xy좌표계를 이용하면 위의 두 group을 하나의 line으로 classify하기 어렵지만 극좌표계를 이용하면 하나의 line으로 쉽게 classify 할 수 있음 => **똑같은 정보도 어떻게 represent 하느냐에 따라 추후의 처리가 달라질 수 있음, represneation이 중요함**
+	- text를 vector로 표현하는 방법
+		- character 기준 vector(26개의 alphabet을 이용하여 전체 문서를 표현)
+		- word 기준(dictionary에 등록된 단어를 기준으로 전체 문서를 표현)
+		- sentence 기준(문장을 기준으로 전체 문서를 표현)
+- **주어진 data를 어떻게 computer에게 input으로 넣어줄 것인지**가 중요한 issue
+- 전통적인 ML에서는 대상의 feature를 사람이 정해주었음
+- Deep Learning에서는 feature를 **learn** 함
 
 ##### parameter vs hyper parameter
 - parameter: train 중에 machine에 의해 바뀌는 값들, 즉 weight와 bias
@@ -424,6 +436,7 @@
 - ![equation](https://latex.codecogs.com/gif.latex?%7B%20L%20%7D_%7B%202%20%7D%3D%5Csqrt%20%7B%20%7B%20%7B%20x%20%7D_%7B%201%20%7D%20%7D%5E%7B%202%20%7D&plus;%7B%20%7B%20x%20%7D_%7B%202%20%7D%20%7D%5E%7B%202%20%7D&plus;...%7B%20%7B%20x%20%7D_%7B%20n%20%7D%20%7D%5E%7B%202%20%7D%20%7D)
 - 참고 http://taewan.kim/post/norm/
 
+
 ##### bucketing / binning
 - continuous value를 bucket 단위의 discrete 단위로 변환하는 행위
 - ex) 0~10도 사이의 온도는 0.1도의 민감도(sensitivity)에서 각각 (0~0.1), (0.1~0.2) .. (0.9~10)의 100가지 bucket으로 변환할 수 있다
@@ -661,7 +674,21 @@
 	- <img src='./imgs/equation_25.jpeg' width=200>
 	- <img src='./imgs/equation_26.png'>을 정보량의 크기로 생각하면 svd는 원래의 matrix A를 정보량의 크기에 따른 여러개의 layer로 나눠준다고 해석할 수 있음
 	- ex) image compression
-
+- `2019.05.07 추가`
+- U(mxm), V(nxn)을 이용하는 것을 full svd라고 함
+- 원래의 matrix가 거대한 경우 full svd는 거의 안쓰고 reduced svd를 이용함
+- reduced svd를 이용하는 기본 원리는 matrix multiply를 진행할 때 0으로 인하여 사라지는 부분을 다 제거할 수 있는것에서 출발함
+	- thin svd
+		- SIGMA에서 대각파트에 해당하지 않는, 0으로만 이루어진 직사각형 파트를 없애고 이용
+		- 즉 SIGMA를 rectangle이 아니라 square로 만들어서 svd 진행
+		- U(mxs), SIGMA(sxs), V_transpose(sxn)
+	- compact svd
+		- thin svd에서 0인 eigenvalue를 모두 제거한 svd
+		- thin svd보다 더 작은 크기의 matrix를 이용할 수 있음
+		- U(mxt), SIGMA(txt), V_transpose(txn), t < s
+	- truncated svd
+		- compact svd보다 더 작은 matrix를 이용하고자 eigenvalue중에서 작은 몇개를 truncate하여 진행한 svd
+		- U(mxa), SIGMAX(axa), V_transpose(axn), a < t
 
 ##### orthogonal matrix
 - `square matrix A`에 대해서 정의됨
@@ -675,6 +702,8 @@
 		- vector set V를 <img src='imgs/equation_22.png'>라고 하자
 		- vector set V에 대해서 <img src='./imgs/equation_23.png'>을 만족하면 vector V를 independent하다고 함
 	- vector set V가 orthogonal이면서 동시에 모든 v가 영벡터가 아니면 vector set V는 independent함
+
+
 
 ##### 기타 정보
 - https://blog.lunit.io/2018/08/03/batch-size-in-deep-learning/ -> learning rate와 batch size의 적절한 조합을 잘 찾아야함 -> 최적 hyperparameter조합을 잘 찾는게 매우 중요함, batch size도 '잘' 정해야 하는 요소인데, 작은 경우 좋은 점이 있음(실험 결과적으로 안정적인 training 가능)
