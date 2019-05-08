@@ -15,3 +15,4 @@
 - 2019.03.12 - batch normalization 정리
 - 2019.03.29 - tensorflow lazy property 정리
 - 2019.04.14 - eigenvalue, eigenvector, svd 정리
+- 2019.05.08 - representation learning, svd, central limit theory(중심극한정리), law of large nubmers(큰수의 법칙) 정리

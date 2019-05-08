@@ -703,6 +703,17 @@
 		- vector set V에 대해서 <img src='./imgs/equation_23.png'>을 만족하면 vector V를 independent하다고 함
 	- vector set V가 orthogonal이면서 동시에 모든 v가 영벡터가 아니면 vector set V는 independent함
 
+##### central limit theory(중심극한정리)
+- 임의의 모집단(<img src='./imgs/equation_28.png'>)에서 n(>=30)개의 sample을 k회 추출할 때, k가 커짐에 따라 n개의 sample의 평균은 <img src='./imgs/equation_29.png'>를 따른다
+- 중심극한정리의 가장 큰 장점은 모집단이 어떤 확률 분포를 따르는지에 상관없이 표본의 평균이 정규분포에 근사한다는 것!
+- 통계학에서 다루는 내용은 상당수가 정규분포를 가정하므로 중심극한정리의 정규분포 근사는 큰 의미가 있음
+- 내용을 숙지하는것이 중요하다고 판단하여 증명은 생략!
+
+##### law of large numbers(큰수의 법칙)
+- <img src='./imgs/equation_29.png' height=50>
+- <img src='./imgs/equation_30.png' height=50>
+- sampling하는 표본이 커짐에 따라 표번의 평균은 모집단 전체의 평균과 근사하게 됨
+- weak 법칙과 strong 법칙이 있는데 중심극한정리와 마찬가지로 증명자체보다는 내용을 숙지하는 것이 중요하다고 판단하여 필요한 경우 추후 공부할 것!
 
 
 ##### 기타 정보
